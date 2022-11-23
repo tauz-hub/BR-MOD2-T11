@@ -21,7 +21,7 @@ class Game:
         self.player = Dinosaur(self)
 
         self.obstacles = {"smallCactus": SmallCactus(
-        )}
+        ), "largeCactus": LargeCactus(), "bird":  Bird()}
 
     def run(self):
 
@@ -46,6 +46,7 @@ class Game:
     def update(self):
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
+        self.obstacles['bird'].update()
 
         for key, obstacle in self.obstacles.items():
 
@@ -58,10 +59,19 @@ class Game:
 
                     self.playing = False
 
+            if (self.player.dino_rect.x <= obstacle.x <= self.player.dino_rect.x + self.player.image.get_width()) and (self.player.dino_rect.y <= obstacle.y <= self.player.dino_rect.y + self.player.image.get_height()):
+                print(key)
+            if self.player.dino_rect.colliderect(obstacle.rect):
+                print("DAAA")
+
             if self.x_pos_bg < self.game_speed and obstacle.x <= 0:
                 match key:
                     case "smallCactus":
                         self.obstacles[key] = SmallCactus()
+                    case "largeCactus":
+                        self.obstacles[key] = LargeCactus()
+                    case "bird":
+                        self.obstacles[key] = Bird()
 
                 self.obstacles[key].draw(self.screen, self.game_speed)
 
@@ -72,7 +82,9 @@ class Game:
         self.player.draw(self.screen)
 
         # obstacles
+        self.obstacles['largeCactus'].draw(self.screen, self.game_speed)
         self.obstacles['smallCactus'].draw(self.screen, self.game_speed)
+        self.obstacles['bird'].draw(self.screen, self.game_speed)
 
         pygame.display.update()
         pygame.display.flip()
