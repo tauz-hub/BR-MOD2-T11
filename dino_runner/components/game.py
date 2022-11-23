@@ -2,9 +2,7 @@ import pygame
 
 from dino_runner.utils.constants import *
 from dino_runner.components.dinosaur import Dinosaur
-from dino_runner.components.largeCactus import LargeCactus
-from dino_runner.components.smallCactus import SmallCactus
-from dino_runner.components.bird import Bird
+from dino_runner.components.obstacles.obstacles_manager import ObstacleManager
 
 
 class Game:
@@ -20,8 +18,7 @@ class Game:
         self.y_pos_bg = 380
         self.player = Dinosaur(self)
 
-        self.obstacles = {"smallCactus": SmallCactus(
-        ), "largeCactus": LargeCactus(), "bird":  Bird()}
+        self.obstacleManager = ObstacleManager(self)
 
     def run(self):
 
@@ -40,51 +37,18 @@ class Game:
             if event.type == pygame.QUIT:
                 self.playing = False
 
-    def area(self) -> tuple:
-        return (self.x, self.y), (self.x, self.y + self.height), (self.x + self.width, self.y + self.height), (self.x + self.width, self.y)
-
     def update(self):
+
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
-        self.obstacles['bird'].update()
-
-        for key, obstacle in self.obstacles.items():
-
-            area = (obstacle.x, obstacle.y), (obstacle.x, obstacle.y + obstacle.rect.height), (obstacle.x +
-                                                                                               obstacle.rect.width, obstacle.y + obstacle.rect.height), (obstacle.x + obstacle.rect.width, obstacle.y)
-            discount = 10
-            for vertex in area:
-                if (self.player.dino_rect.x <= vertex[0] <= self.player.dino_rect.x - discount + self.player.image.get_width()) and (self.player.dino_rect.y <= vertex[1] <= self.player.dino_rect.y - discount + self.player.image.get_height()):
-                    print(key)
-
-                    self.playing = False
-
-            if (self.player.dino_rect.x <= obstacle.x <= self.player.dino_rect.x + self.player.image.get_width()) and (self.player.dino_rect.y <= obstacle.y <= self.player.dino_rect.y + self.player.image.get_height()):
-                print(key)
-            if self.player.dino_rect.colliderect(obstacle.rect):
-                print("DAAA")
-
-            if self.x_pos_bg < self.game_speed and obstacle.x <= 0:
-                match key:
-                    case "smallCactus":
-                        self.obstacles[key] = SmallCactus()
-                    case "largeCactus":
-                        self.obstacles[key] = LargeCactus()
-                    case "bird":
-                        self.obstacles[key] = Bird()
-
-                self.obstacles[key].draw(self.screen, self.game_speed)
+        self.obstacleManager.update()
 
     def draw(self):
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
         self.draw_background()
         self.player.draw(self.screen)
-
-        # obstacles
-        self.obstacles['largeCactus'].draw(self.screen, self.game_speed)
-        self.obstacles['smallCactus'].draw(self.screen, self.game_speed)
-        self.obstacles['bird'].draw(self.screen, self.game_speed)
+        self.obstacleManager.draw()
 
         pygame.display.update()
         pygame.display.flip()
