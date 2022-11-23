@@ -2,10 +2,10 @@ import pygame
 import os
 
 # Global Constants
-TITLE = "Chrome Dino Runner"
+TITLE = "Chrome Dino Runner - Tauã Ferreira"
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
-FPS = 30
+FPS = 60
 IMG_DIR = os.path.join(os.path.dirname(__file__), "..", "assets")
 
 # Assets Constants
@@ -27,8 +27,10 @@ RUNNING_HAMMER = [
 ]
 
 JUMPING = pygame.image.load(os.path.join(IMG_DIR, "Dino/DinoJump.png"))
-JUMPING_SHIELD = pygame.image.load(os.path.join(IMG_DIR, "Dino/DinoJumpShield.png"))
-JUMPING_HAMMER = pygame.image.load(os.path.join(IMG_DIR, "Dino/DinoJumpHammer.png"))
+JUMPING_SHIELD = pygame.image.load(
+    os.path.join(IMG_DIR, "Dino/DinoJumpShield.png"))
+JUMPING_HAMMER = pygame.image.load(
+    os.path.join(IMG_DIR, "Dino/DinoJumpHammer.png"))
 
 DUCKING = [
     pygame.image.load(os.path.join(IMG_DIR, "Dino/DinoDuck1.png")),
@@ -68,5 +70,8 @@ HAMMER = pygame.image.load(os.path.join(IMG_DIR, 'Other/hammer.png'))
 BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))
 
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
+
+GAME_VEL = 20
+POSITION_Y_ENTITIES = 310
 
 DEFAULT_TYPE = "default"
