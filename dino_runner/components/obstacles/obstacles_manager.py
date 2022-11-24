@@ -47,6 +47,10 @@ class ObstacleManager:
 
                     self.parent.playing = False
 
+    def reset_obstacles(self):
+        self.obstacles = {"smallCactus": Cactus(
+            "smallCactus"), "largeCactus":  Cactus("largeCactus"), "bird":  Bird()}
+
     def area(self):
         return (self.x, self.y), (self.x, self.y + self.height), (self.x + self.width, self.y + self.height), (self.x + self.width, self.y)
 
