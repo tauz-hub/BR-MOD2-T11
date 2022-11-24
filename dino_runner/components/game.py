@@ -22,6 +22,8 @@ class Game:
         self.x_pos_bg = 0
         self.y_pos_bg = 380
         self.player = Dinosaur(self)
+        self.position_for_text_screen_height = SCREEN_HEIGHT // 2
+        self.position_for_text_screen_width = SCREEN_WIDTH // 2
 
         self.obstacle_manager = ObstacleManager(self)
 
@@ -95,27 +97,35 @@ class Game:
             if event.type == pygame.QUIT:
                 self.playing = False
                 self.running = False
+
             elif event.type == pygame.KEYDOWN:
+                self.reset_values()
                 self.run()
+
+    def reset_values(self):
+        self.score = 0
+        self.game_speed = GAME_VEL
+
+    def draw_texts(self, text):
+        font = pygame.font.Font(FONT_STYLE, 22)
+        text = font.render(text, False, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (self.position_for_text_screen_width,
+                            self.position_for_text_screen_height)
+        self.screen.blit(text, text_rect)
 
     def show_menu(self):
         self.screen.fill((255, 255, 255))
-        half_screen_height = SCREEN_HEIGHT // 2
-        half_screen_width = SCREEN_WIDTH // 2
 
         if self.death_count == 0:
-            font = pygame.font.Font(FONT_STYLE, 22)
-            text = font.render("Press any key to start", True, (0, 0, 0))
-            text_rect = text.get_rect()
-            text_rect.center = (half_screen_width, half_screen_height)
-            self.screen.blit(text, text_rect)
+            self.draw_texts("Press any key to start")
+
         else:
-            # "Press any key to restart"
-            # Mostrar score atingido e death_count
-            # Quando reiniciar, resetar game_speed e score
-            # método reutilizável para desenhar os textos
-            self.screen.blit(ICON, (half_screen_width -
-                             20, half_screen_height - 140))
+            self.draw_texts(
+                f"Press any key to restart | Score: {self.score} | Death: {self.death_count}")
+
+        self.screen.blit(ICON, (self.position_for_text_screen_width -
+                                20, self.position_for_text_screen_height - 140))
 
         pygame.display.update()
         self.handle_events_on_menu()
