@@ -1,6 +1,5 @@
 import pygame
 from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, POSITION_Y_ENTITIES, GAME_VEL
-from datetime import time
 
 X_POS = 80
 Y_POS = 310
@@ -17,23 +16,22 @@ class Dinosaur:
         self.dino_run = True
         self.dino_jump = False
         self.dino_duck = False
+
         self.dino_dash_load = 100
 
         self.jump_vel = JUMP_VEL
         self.parent = parent
 
-    def run(self):
-        self.image = RUNNING[0] if self.step_index < 5 else RUNNING[1]
-        self.dino_rect = self.image.get_rect()
-        self.dino_rect.x = 80
-        self.dino_rect.y = POSITION_Y_ENTITIES
-        self.step_index += 1
-
     def update(self, user_input):
         if self.dino_run:
             self.run()
+            self.dino_jump = False
+            self.dino_duck = False
+
         elif self.dino_jump:
             self.jump()
+            self.dino_run = False
+            self.dino_duck = False
 
         if (user_input[pygame.K_UP] or user_input[pygame.K_SPACE]) and not self.dino_jump and not self.dino_duck:
             self.dino_jump = True
@@ -47,12 +45,6 @@ class Dinosaur:
             self.dash()
 
             # TODO load dash in time periods
-            # print(self.dino_dash_load)
-            #time1 = datetime.time()
-            # if self.dino_dash_load == 0:
-            # self.dino_dash_load = 1
-            # elif self.dino_dash_load == 100:
-            #self.dino_dash_load = 0
 
         else:
             self.parent.game_speed = GAME_VEL
@@ -68,8 +60,13 @@ class Dinosaur:
             else:
                 self.duck()
 
-        else:
-            self.dino_duck = False
+    def run(self):
+        self.dino_run = True
+        self.image = RUNNING[0] if self.step_index < 5 else RUNNING[1]
+        self.dino_rect = self.image.get_rect()
+        self.dino_rect.x = 80
+        self.dino_rect.y = POSITION_Y_ENTITIES
+        self.step_index += 1
 
     def duck(self):
         self.dino_duck = True
@@ -89,7 +86,7 @@ class Dinosaur:
         self.jump_vel -= 0.8
 
     def dash(self):
-        self.parent.game_speed = GAME_VEL + 10
+        self.parent.game_speed = GAME_VEL + 15
         self.image = DUCKING[0]
         self.dino_duck = True
         if not self.dino_jump:
