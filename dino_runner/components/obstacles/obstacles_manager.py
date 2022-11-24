@@ -31,11 +31,16 @@ class ObstacleManager:
 
     def checkCollision(self):
         rate_ajust = 0
+
         for key, obstacle in self.obstacles.items():
-            current_y = obstacle.y - rate_ajust
+            rate_ajust_small_cactus_hit_obstacle = 0
 
             if self.parent.player.dino_duck:
                 rate_ajust = RUNNING[0].get_height() - DUCKING[0].get_height()
+                if key == "smallCactus":
+                    rate_ajust_small_cactus_hit_obstacle = 20
+
+            current_y = obstacle.y - rate_ajust_small_cactus_hit_obstacle - rate_ajust
 
             area = (obstacle.x, current_y), (obstacle.x, current_y + obstacle.rect.height), (obstacle.x +
                                                                                              obstacle.rect.width, current_y + obstacle.rect.height), (obstacle.x + obstacle.rect.width, current_y)

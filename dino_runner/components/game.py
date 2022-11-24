@@ -18,6 +18,7 @@ class Game:
         self.running = False
         self.game_speed = GAME_VEL
         self.score = 0
+        self.best_score = 0
         self.death_count = 0
         self.x_pos_bg = 0
         self.y_pos_bg = 380
@@ -87,9 +88,10 @@ class Game:
 
     def draw_score(self):
         font = pygame.font.Font(FONT_STYLE, 22)
-        text = font.render(f"Score: {self.score}", True, (0, 0, 0))
+        text = font.render(
+            f"Score: {self.score} | Best Score: {self.best_score}", False, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (1000, 50)
+        text_rect.center = (900, 50)
         self.screen.blit(text, text_rect)
 
     def handle_events_on_menu(self):
@@ -116,6 +118,9 @@ class Game:
 
     def show_menu(self):
         self.screen.fill((255, 255, 255))
+
+        if self.score > self.best_score:
+            self.best_score = self.score
 
         if self.death_count == 0:
             self.draw_texts("Press any key to start")
