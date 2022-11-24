@@ -22,6 +22,8 @@ class Dinosaur:
         self.jump_vel = JUMP_VEL
         self.parent = parent
 
+        self.ant_vel = 0
+
     def update(self, user_input):
         if self.dino_run:
             self.run()
@@ -42,12 +44,17 @@ class Dinosaur:
             self.dino_run = True
 
         if user_input[pygame.K_RIGHT]:
+            if self.ant_vel == 0:
+                self.ant_vel = self.parent.game_speed
             self.dash()
 
             # TODO load dash in time periods
 
         else:
-            self.parent.game_speed = GAME_VEL
+            if not self.ant_vel == 0:
+                self.parent.game_speed = self.ant_vel
+                self.ant_vel = 0
+
             self.dino_duck = False
 
         if self.step_index >= 10:
@@ -86,7 +93,8 @@ class Dinosaur:
         self.jump_vel -= 0.8
 
     def dash(self):
-        self.parent.game_speed = GAME_VEL + 15
+
+        self.parent.game_speed = self.ant_vel + 15
         self.image = DUCKING[0]
         self.dino_duck = True
         if not self.dino_jump:

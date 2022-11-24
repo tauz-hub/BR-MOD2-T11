@@ -72,6 +72,7 @@ BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
 GAME_VEL = 20
+MAX_GAME_VEL = 45
 POSITION_Y_ENTITIES = 310
 
 DEFAULT_TYPE = "default"
