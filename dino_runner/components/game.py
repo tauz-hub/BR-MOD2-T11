@@ -49,6 +49,7 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
+                self.running = False
 
     def update(self):
 
@@ -94,7 +95,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.playing = False
                 self.running = False
-            elif event.type == pygame.KEYDOWN:  # não confundir com K_DOWN
+            elif event.type == pygame.KEYDOWN:
                 self.run()
 
     def show_menu(self):

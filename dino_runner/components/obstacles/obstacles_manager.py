@@ -45,7 +45,9 @@ class ObstacleManager:
                 if (self.parent.player.dino_rect.x <= vertex[0] <= self.parent.player.dino_rect.x - discount + self.parent.player.image.get_width()) and (self.parent.player.dino_rect.y <= vertex[1] <= self.parent.player.dino_rect.y - discount + self.parent.player.image.get_height()):
                     print(key)
 
+                    self.parent.death_count += 1
                     self.parent.playing = False
+                    break
 
     def reset_obstacles(self):
         self.obstacles = {"smallCactus": Cactus(
