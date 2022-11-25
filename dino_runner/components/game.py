@@ -41,7 +41,6 @@ class Game:
     def run(self):
 
         self.playing = True
-
         self.obstacle_manager.reset_obstacles()
         self.power_up_manager.reset_power_ups()
         while self.playing:
@@ -74,10 +73,10 @@ class Game:
     def timer_power_up_time(self):
         if self.player.has_power_up:
 
-            time_to_show = round(
+            self.time_to_show = round(
                 (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
 
-            if time_to_show < 0:
+            if self.time_to_show < 0:
                 self.power_up_manager.reset_power_ups()
                 self.power_up_manager.remove_player_power_up()
 
@@ -93,14 +92,11 @@ class Game:
         self.obstacle_manager.draw()
         self.power_up_manager.draw()
         self.draw_score()
+        self.draw_dash_bar()
 
         if self.player.has_power_up:
             self.put_power_up(self.player.active_power_up.image)
-            time_to_show = round(
-                (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
-
-            self.draw_texts(f"{round(time_to_show)}s",
-                            100, SCREEN_HEIGHT - 120, 24)
+            self.draw_timer_power_up()
 
         pygame.display.update()
         pygame.display.flip()
@@ -114,13 +110,17 @@ class Game:
             self.x_pos_bg = 0
         self.x_pos_bg -= self.game_speed
 
-    def draw_score(self):
+    def draw_timer_power_up(self):
 
+        self.draw_texts(f"{round(self.time_to_show)}s",
+                        100, SCREEN_HEIGHT - 120, 24)
+
+    def draw_dash_bar(self):
         percentage = self.player.dino_dash_load
         bar_dash = "|" * percentage
-
         self.draw_texts(f"Dash bar: {bar_dash}", 50, SCREEN_HEIGHT - 50, 24)
 
+    def draw_score(self):
         self.draw_texts(
             f"Score: {self.score} | Best Score: {self.best_score}", 900, 50, 24, True)
 
