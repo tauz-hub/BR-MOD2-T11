@@ -159,8 +159,22 @@ class Game:
 
         if self.death_count == 0:
             self.draw_texts("Press any key to start",
-                            position_x_text, position_y_text, 22, True)
+                            position_x_text, position_y_text, 30, True)
 
+            self.screen.blit(
+                SHIELD, (position_x_text - 150, position_y_text + 80))
+            self.draw_texts(" | protect you for a while",
+                            position_x_text - 100, position_y_text + 90, 22)
+
+            self.screen.blit(
+                HAMMER, (position_x_text - 150, position_y_text + 140))
+            self.draw_texts(" | can destroy an obstacle",
+                            position_x_text - 100, position_y_text + 150, 22)
+
+            self.screen.blit(
+                SWORD, (position_x_text - 150, position_y_text + 200))
+            self.draw_texts(" | earn points by killing birds",
+                            position_x_text - 100, position_y_text + 210, 22)
         else:
             self.power_up_manager.remove_player_power_up()
             self.draw_texts(
