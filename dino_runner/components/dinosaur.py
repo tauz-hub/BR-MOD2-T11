@@ -1,14 +1,19 @@
 import pygame
-from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, POSITION_Y_ENTITIES, GAME_VEL
-
+from dino_runner.utils.constants import *
 X_POS = 80
 Y_POS = 310
 JUMP_VEL = 8.5
 
 
+DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD}
+JUMP_IMG = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD}
+RUN_IMG = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD}
+
+
 class Dinosaur:
     def __init__(self, parent) -> None:
-        self.image = RUNNING[0]
+        self.type = DEFAULT_TYPE
+        self.image = RUN_IMG[self.type][0]
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = 80
         self.dino_rect.y = POSITION_Y_ENTITIES
@@ -23,6 +28,13 @@ class Dinosaur:
         self.parent = parent
 
         self.ant_vel = 0
+        self.setup_state()
+
+    def setup_state(self):
+        self.has_power_up = False
+        self.shield = False
+        self.show_text = False
+        self.shield_time_up = 0
 
     def update(self, user_input):
         if self.dino_run:

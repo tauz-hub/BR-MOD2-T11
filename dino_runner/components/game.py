@@ -3,7 +3,8 @@ import pygame
 from dino_runner.utils.constants import *
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacles_manager import ObstacleManager
-
+from dino_runner.components.power_ups.power_up_manager import PowerUpManager
+from dino_runner.utils.text_utils import draw_message_component
 FONT_STYLE = "freesansbold.ttf"
 
 
@@ -25,11 +26,13 @@ class Game:
         self.player = Dinosaur(self)
         self.position_for_text_screen_height = SCREEN_HEIGHT // 2
         self.position_for_text_screen_width = SCREEN_WIDTH // 2
-
         self.obstacle_manager = ObstacleManager(self)
+        self.power_up_manager = PowerUpManager()
 
     def execute(self):
         self.running = True
+        self.power_up_manager.reset_power_ups()
+        self.power_up_manager.update(self.score, self.game_speed, self.player)
         while self.running:
             if not self.playing:
                 self.show_menu()
@@ -63,8 +66,27 @@ class Game:
 
     def update_score(self):
         self.score += 1
+
+        self.draw_power_up_time()
+        self.power_up_manager.draw(self.screen)
         if self.score % 100 == 0 and self.game_speed < MAX_GAME_VEL:
             self.game_speed += 2
+
+    def draw_power_up_time(self):
+        if self.player.has_power_up:
+            time_to_show = round(
+                (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
+            if time_to_show >= 0:
+                draw_message_component(
+                    f"{self.player.type.capitalize()} enabled for {time_to_show} seconds",
+                    self.screen,
+                    font_size=18,
+                    pos_x_center=500,
+                    pos_y_center=40
+                )
+            else:
+                self.player.has_power_up = False
+                self.player.type = DEFAULT_TYPE
 
     def draw(self):
         self.clock.tick(FPS)
@@ -127,7 +149,7 @@ class Game:
 
         else:
             self.draw_texts(
-                f"Press any key to restart | Score: {self.score} | Death: {self.death_count}")
+                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}")
 
         self.screen.blit(ICON, (self.position_for_text_screen_width -
                                 20, self.position_for_text_screen_height - 140))
