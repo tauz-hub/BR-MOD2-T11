@@ -27,12 +27,11 @@ class Game:
         self.position_for_text_screen_height = SCREEN_HEIGHT // 2
         self.position_for_text_screen_width = SCREEN_WIDTH // 2
         self.obstacle_manager = ObstacleManager(self)
-        self.power_up_manager = PowerUpManager()
+        self.power_up_manager = PowerUpManager(self)
 
     def execute(self):
         self.running = True
-        self.power_up_manager.reset_power_ups()
-        self.power_up_manager.update(self.score, self.game_speed, self.player)
+
         while self.running:
             if not self.playing:
                 self.show_menu()
@@ -45,6 +44,7 @@ class Game:
         self.playing = True
 
         self.obstacle_manager.reset_obstacles()
+        self.power_up_manager.reset_power_ups()
         while self.playing:
             self.events()
             self.update()
@@ -62,31 +62,30 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacle_manager.update()
+        self.power_up_manager.update()
         self.update_score()
+        self.draw_power_up_time()
 
     def update_score(self):
         self.score += 1
 
-        self.draw_power_up_time()
-        self.power_up_manager.draw(self.screen)
         if self.score % 100 == 0 and self.game_speed < MAX_GAME_VEL:
             self.game_speed += 2
 
     def draw_power_up_time(self):
         if self.player.has_power_up:
+
             time_to_show = round(
                 (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
+
             if time_to_show >= 0:
-                draw_message_component(
-                    f"{self.player.type.capitalize()} enabled for {time_to_show} seconds",
-                    self.screen,
-                    font_size=18,
-                    pos_x_center=500,
-                    pos_y_center=40
-                )
+
+                text_message = f"{self.player.active_power_up.type_power_up} enabled for {round(time_to_show)} seconds"
+                self.draw_texts(text_message, self.position_for_text_screen_width,
+                                100)
+                pygame.display.update()
             else:
-                self.player.has_power_up = False
-                self.player.type = DEFAULT_TYPE
+                self.power_up_manager.reset_power_ups()
 
     def draw(self):
         self.clock.tick(FPS)
@@ -94,6 +93,7 @@ class Game:
         self.draw_background()
         self.player.draw(self.screen)
         self.obstacle_manager.draw()
+        self.power_up_manager.draw()
         self.draw_score()
 
         pygame.display.update()
@@ -130,26 +130,29 @@ class Game:
         self.score = 0
         self.game_speed = GAME_VEL
 
-    def draw_texts(self, text):
+    def draw_texts(self, text_message, set_position_x, set_position_y):
         font = pygame.font.Font(FONT_STYLE, 22)
-        text = font.render(text, False, (0, 0, 0))
+        text = font.render(text_message, False, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (self.position_for_text_screen_width,
-                            self.position_for_text_screen_height)
+        text_rect.center = (set_position_x,
+                            set_position_y)
         self.screen.blit(text, text_rect)
 
     def show_menu(self):
         self.screen.fill((255, 255, 255))
+        position_x_text = self.position_for_text_screen_width
+        position_y_text = self.position_for_text_screen_height
 
         if self.score > self.best_score:
             self.best_score = self.score
 
         if self.death_count == 0:
-            self.draw_texts("Press any key to start")
+            self.draw_texts("Press any key to start",
+                            position_x_text, position_y_text)
 
         else:
             self.draw_texts(
-                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}")
+                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text)
 
         self.screen.blit(ICON, (self.position_for_text_screen_width -
                                 20, self.position_for_text_screen_height - 140))

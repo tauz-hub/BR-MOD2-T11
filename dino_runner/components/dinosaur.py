@@ -21,7 +21,9 @@ class Dinosaur:
         self.dino_run = True
         self.dino_jump = False
         self.dino_duck = False
-
+        self.has_power_up = False
+        self.active_power_up = any
+        self.power_up_time = 0
         self.dino_dash_load = 100
 
         self.jump_vel = JUMP_VEL
