@@ -1,17 +1,16 @@
 import pygame
 from dino_runner.utils.constants import *
-from dino_runner.components.power_ups.power_up import PowerUp
 X_POS = 80
 Y_POS = 310
 JUMP_VEL = 8.5
 
 
 DUCK_IMG = {DEFAULT_TYPE: DUCKING,
-            SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER}
+            SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER,  SWORD_TYPE: DUCKING_SWORD}
 JUMP_IMG = {DEFAULT_TYPE: JUMPING,
-            SHIELD_TYPE: JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
+            SHIELD_TYPE: JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER, SWORD_TYPE: JUMPING_SWORD}
 RUN_IMG = {DEFAULT_TYPE: RUNNING,
-           SHIELD_TYPE: RUNNING_SHIELD, HAMMER_TYPE: RUNNING_HAMMER}
+           SHIELD_TYPE: RUNNING_SHIELD, HAMMER_TYPE: RUNNING_HAMMER, SWORD_TYPE:  RUNNING_SWORD}
 
 
 class Dinosaur:
@@ -87,10 +86,17 @@ class Dinosaur:
 
         if self.has_power_up:
             power_up_name = self.active_power_up.type_power_up
+
             if power_up_name == "shield":
                 self.put_power_up(SHIELD)
             elif power_up_name == "hammer":
                 self.put_power_up(HAMMER)
+            elif power_up_name == "sword":
+                self.put_power_up(SWORD)
+
+    def expand_vision(self):
+        self.parent.screen = pygame.display.set_mode(
+            (SCREEN_WIDTH + 2000, SCREEN_HEIGHT))
 
     def put_power_up(self, power_up):
         self.parent.screen.blit(power_up, (self.dino_rect.x, self.dino_rect.y))

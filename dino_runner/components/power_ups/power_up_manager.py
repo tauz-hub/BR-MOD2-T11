@@ -2,12 +2,14 @@ from dino_runner.components.power_ups.shield import Shield
 from dino_runner.utils.constants import *
 import pygame
 from dino_runner.components.power_ups.hammer import Hammer
+from dino_runner.components.power_ups.sword import Sword
 
 
 class PowerUpManager:
     def __init__(self, parent):
         self.parent = parent
-        self.power_ups = {"shield": Shield(), "hammer": Hammer()}
+        self.power_ups = {
+            "shield": Shield(), "hammer": Hammer(), "sword": Sword()}
         self.when_appears = 0
 
     def update(self):
@@ -49,7 +51,7 @@ class PowerUpManager:
                         self.parent.player.type = power_up.type_power_up
                         self.parent.player.power_up_time = pygame.time.get_ticks() + \
                             (power_up.duration * 1000)
-                        # self.power_ups.pop(key)
+
                         self.remove_power_up_from_map()
                         stop_checks = True
                         break
@@ -67,7 +69,8 @@ class PowerUpManager:
         self.power_ups.clear()
 
     def reset_power_ups(self):
-        self.power_ups = {"shield": Shield(), "hammer": Hammer()}
+        self.power_ups = {
+            "shield": Shield(), "hammer": Hammer(), "sword": Sword()}
 
     def reset_power_up(self, key):
         match key:
@@ -75,6 +78,8 @@ class PowerUpManager:
                 self.power_ups[key] = Shield()
             case "hammer":
                 self.power_ups[key] = Hammer()
+            case "sword":
+                self.power_ups[key] = Sword()
 
     def area(self):
         return (self.x, self.y), (self.x, self.y + self.height), (self.x + self.width, self.y + self.height), (self.x + self.width, self.y)

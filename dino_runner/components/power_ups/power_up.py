@@ -1,6 +1,5 @@
 import random
 from dino_runner.utils.constants import *
-import pygame
 
 
 class PowerUp(object):

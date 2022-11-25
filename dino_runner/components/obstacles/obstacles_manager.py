@@ -1,6 +1,7 @@
 from dino_runner.components.obstacles.cactus import Cactus
 from dino_runner.components.obstacles.bird import Bird
 from dino_runner.utils.constants import RUNNING, DUCKING
+from dino_runner.utils.constants import *
 
 
 class ObstacleManager:
@@ -10,7 +11,9 @@ class ObstacleManager:
             "smallCactus"), "largeCactus":  Cactus("largeCactus"), "bird":  Bird()}
 
     def update(self):
+
         self.obstacles['bird'].update()
+
         self.checkCollision()
         self.generateNewObstacles()
 
@@ -47,16 +50,28 @@ class ObstacleManager:
                         power_up_name = self.parent.player.active_power_up.type_power_up
                         if power_up_name == "shield":
 
-                            pass
+                            break
                         elif power_up_name == "hammer":
 
                             self.reset_obstacle(key)
                             self.parent.power_up_manager.reset_power_ups()
                             self.parent.power_up_manager.remove_player_power_up()
-                    else:
-                        self.parent.death_count += 1
-                        self.parent.playing = False
-                        break
+                            self.parent.score += 100
+                            break
+
+                        elif power_up_name == "sword":
+                            if key == "bird":
+                                self.reset_obstacle(key)
+                                self.parent.power_up_manager.reset_power_ups()
+                                self.parent.power_up_manager.remove_player_power_up()
+                                self.parent.score += 500
+                                break
+
+                        
+
+                    self.parent.death_count += 1
+                    self.parent.playing = False
+                    break
 
     def reset_obstacle(self, key):
         match key:

@@ -4,7 +4,6 @@ from dino_runner.utils.constants import *
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacles_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
-from dino_runner.utils.text_utils import draw_message_component
 FONT_STYLE = "freesansbold.ttf"
 
 
@@ -156,10 +155,9 @@ class Game:
         else:
             self.power_up_manager.remove_player_power_up()
             self.draw_texts(
-                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text)
-
-        self.screen.blit(ICON, (self.position_for_text_screen_width -
-                                20, self.position_for_text_screen_height - 140))
+                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text - 40)
+            self.screen.blit(RESET, (self.position_for_text_screen_width -
+                                     20, self.position_for_text_screen_height))
 
         pygame.display.update()
         self.handle_events_on_menu()
