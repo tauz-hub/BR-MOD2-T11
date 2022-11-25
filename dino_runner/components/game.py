@@ -135,6 +135,7 @@ class Game:
                 self.run()
 
     def reset_values(self):
+        self.player.dino_dash_load = 100
         self.score = 0
         self.game_speed = GAME_VEL
 
