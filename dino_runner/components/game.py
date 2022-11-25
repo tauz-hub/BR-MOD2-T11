@@ -60,12 +60,10 @@ class Game:
 
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
-
         self.obstacle_manager.update()
-
         self.power_up_manager.update()
         self.update_score()
-        self.draw_power_up_time()
+        self.timer_power_up_time()
 
     def update_score(self):
         self.score += 1
@@ -73,19 +71,13 @@ class Game:
         if self.score % 100 == 0 and self.game_speed < MAX_GAME_VEL:
             self.game_speed += 2
 
-    def draw_power_up_time(self):
+    def timer_power_up_time(self):
         if self.player.has_power_up:
 
             time_to_show = round(
                 (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
 
-            if time_to_show >= 0:
-
-                text_message = f"{round(time_to_show)}s"
-                self.draw_texts(text_message, self.position_for_text_screen_width,
-                                100, 40)
-                pygame.display.update()
-            else:
+            if time_to_show < 0:
                 self.power_up_manager.reset_power_ups()
                 self.power_up_manager.remove_player_power_up()
 
@@ -97,6 +89,13 @@ class Game:
         self.obstacle_manager.draw()
         self.power_up_manager.draw()
         self.draw_score()
+
+        if self.player.has_power_up:
+            time_to_show = round(
+                (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
+
+            self.draw_texts(f"{round(time_to_show)}s",
+                            100, SCREEN_HEIGHT - 180)
 
         pygame.display.update()
         pygame.display.flip()
@@ -111,12 +110,14 @@ class Game:
         self.x_pos_bg -= self.game_speed
 
     def draw_score(self):
-        font = pygame.font.Font(FONT_STYLE, 22)
-        text = font.render(
-            f"Score: {self.score} | Best Score: {self.best_score}", False, (0, 0, 0))
-        text_rect = text.get_rect()
-        text_rect.center = (900, 50)
-        self.screen.blit(text, text_rect)
+
+        percentage = self.player.dino_dash_load
+        bar_dash = "|" * percentage
+
+        self.draw_texts(f"Bar Dash: {bar_dash}", 50, SCREEN_HEIGHT - 50)
+
+        self.draw_texts(
+            f"Score: {self.score} | Best Score: {self.best_score}", 900, 50, 22, True)
 
     def handle_events_on_menu(self):
         for event in pygame.event.get():
@@ -132,12 +133,15 @@ class Game:
         self.score = 0
         self.game_speed = GAME_VEL
 
-    def draw_texts(self, text_message, set_position_x, set_position_y, font_size=22):
+    def draw_texts(self, text_message, set_position_x, set_position_y, font_size=22, ally_with_center=False):
         font = pygame.font.Font(FONT_STYLE, font_size)
         text = font.render(text_message, False, (0, 0, 0))
-        text_rect = text.get_rect()
-        text_rect.center = (set_position_x,
-                            set_position_y)
+
+        text_rect = (set_position_x, set_position_y)
+        if ally_with_center:
+            text_rect = text.get_rect()
+            text_rect.center = (set_position_x,
+                                set_position_y)
         self.screen.blit(text, text_rect)
 
     def show_menu(self):
@@ -150,12 +154,12 @@ class Game:
 
         if self.death_count == 0:
             self.draw_texts("Press any key to start",
-                            position_x_text, position_y_text)
+                            position_x_text, position_y_text, 22, True)
 
         else:
             self.power_up_manager.remove_player_power_up()
             self.draw_texts(
-                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text - 40)
+                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text - 40, 22, True)
             self.screen.blit(RESET, (self.position_for_text_screen_width -
                                      20, self.position_for_text_screen_height))
 

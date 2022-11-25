@@ -1,9 +1,9 @@
 import pygame
 from dino_runner.utils.constants import *
+
 X_POS = 80
 Y_POS = 310
 JUMP_VEL = 8.5
-
 
 DUCK_IMG = {DEFAULT_TYPE: DUCKING,
             SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER,  SWORD_TYPE: DUCKING_SWORD}
@@ -28,10 +28,8 @@ class Dinosaur:
         self.active_power_up = any
         self.power_up_time = 0
         self.dino_dash_load = 100
-
         self.jump_vel = JUMP_VEL
         self.parent = parent
-
         self.ant_vel = 0
         self.setup_state()
 
@@ -63,18 +61,22 @@ class Dinosaur:
         if user_input[pygame.K_RIGHT]:
             if self.ant_vel == 0:
                 self.ant_vel = self.parent.game_speed
-            self.dash()
 
-            # TODO load dash in time periods
+            if self.dino_dash_load > 0:
+                self.dash()
+                self.dino_dash_load -= 1
 
         else:
+            if self.dino_dash_load < 100:
+                self.dino_dash_load += 1
+
             if not self.ant_vel == 0:
                 self.parent.game_speed = self.ant_vel
                 self.ant_vel = 0
 
             self.dino_duck = False
 
-        if self.step_index >= 9:
+        if self.step_index >= 8:
             self.step_index = 0
 
         if user_input[pygame.K_DOWN]:
@@ -129,6 +131,7 @@ class Dinosaur:
     def dash(self):
 
         self.parent.game_speed = self.ant_vel + 15
+
         self.image = DUCK_IMG[self.type][self.step_index // 5]
         self.dino_duck = True
         if not self.dino_jump:

@@ -67,8 +67,6 @@ class ObstacleManager:
                                 self.parent.score += 500
                                 break
 
-                        
-
                     self.parent.death_count += 1
                     self.parent.playing = False
                     break
