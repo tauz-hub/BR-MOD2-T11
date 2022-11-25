@@ -75,7 +75,6 @@ BIRD = [
 CLOUD = pygame.image.load(os.path.join(IMG_DIR, 'Other/Cloud.png'))
 SHIELD = pygame.image.load(os.path.join(IMG_DIR, 'Other/shield.png'))
 HAMMER = pygame.image.load(os.path.join(IMG_DIR, 'Other/hammer.png'))
-ARROW = pygame.image.load(os.path.join(IMG_DIR, 'Other/Arrow.png'))
 SWORD = pygame.image.load(os.path.join(IMG_DIR, 'Other/Sword.png'))
 
 BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))

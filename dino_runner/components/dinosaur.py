@@ -86,23 +86,6 @@ class Dinosaur:
             else:
                 self.duck()
 
-        if self.has_power_up:
-            power_up_name = self.active_power_up.type_power_up
-
-            if power_up_name == "shield":
-                self.put_power_up(SHIELD)
-            elif power_up_name == "hammer":
-                self.put_power_up(HAMMER)
-            elif power_up_name == "sword":
-                self.put_power_up(SWORD)
-
-    def expand_vision(self):
-        self.parent.screen = pygame.display.set_mode(
-            (SCREEN_WIDTH + 2000, SCREEN_HEIGHT))
-
-    def put_power_up(self, power_up):
-        self.parent.screen.blit(power_up, (self.dino_rect.x, self.dino_rect.y))
-
     def run(self):
         self.dino_run = True
         self.image = RUN_IMG[self.type][self.step_index // 5]

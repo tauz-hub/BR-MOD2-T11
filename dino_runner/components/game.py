@@ -81,6 +81,10 @@ class Game:
                 self.power_up_manager.reset_power_ups()
                 self.power_up_manager.remove_player_power_up()
 
+    def put_power_up(self, power_up):
+        self.screen.blit(
+            power_up, (50, SCREEN_HEIGHT - 130))
+
     def draw(self):
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
@@ -91,11 +95,12 @@ class Game:
         self.draw_score()
 
         if self.player.has_power_up:
+            self.put_power_up(self.player.active_power_up.image)
             time_to_show = round(
                 (self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
 
             self.draw_texts(f"{round(time_to_show)}s",
-                            100, SCREEN_HEIGHT - 180)
+                            100, SCREEN_HEIGHT - 120, 24)
 
         pygame.display.update()
         pygame.display.flip()
@@ -114,10 +119,10 @@ class Game:
         percentage = self.player.dino_dash_load
         bar_dash = "|" * percentage
 
-        self.draw_texts(f"Bar Dash: {bar_dash}", 50, SCREEN_HEIGHT - 50)
+        self.draw_texts(f"Dash bar: {bar_dash}", 50, SCREEN_HEIGHT - 50, 24)
 
         self.draw_texts(
-            f"Score: {self.score} | Best Score: {self.best_score}", 900, 50, 22, True)
+            f"Score: {self.score} | Best Score: {self.best_score}", 900, 50, 24, True)
 
     def handle_events_on_menu(self):
         for event in pygame.event.get():
@@ -147,7 +152,7 @@ class Game:
     def show_menu(self):
         self.screen.fill((255, 255, 255))
         position_x_text = self.position_for_text_screen_width
-        position_y_text = self.position_for_text_screen_height
+        position_y_text = self.position_for_text_screen_height - 50
 
         if self.score > self.best_score:
             self.best_score = self.score
@@ -159,9 +164,15 @@ class Game:
         else:
             self.power_up_manager.remove_player_power_up()
             self.draw_texts(
-                f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text - 40, 22, True)
+                f"Score: {self.score}", position_x_text, position_y_text - 40, 22, True)
             self.screen.blit(RESET, (self.position_for_text_screen_width -
-                                     20, self.position_for_text_screen_height))
+                                     20, self.position_for_text_screen_height + 80))
+
+            self.draw_texts(
+                f"Deaths: {self.death_count}", position_x_text, position_y_text, 22, True)
+
+            self.draw_texts(
+                f"Press any key to restart", position_x_text, position_y_text + 40, 22, True)
 
         pygame.display.update()
         self.handle_events_on_menu()
