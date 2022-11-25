@@ -77,3 +77,4 @@ POSITION_Y_ENTITIES = 310
 
 DEFAULT_TYPE = "default"
 SHIELD_TYPE = "shield"
+HAMMER_TYPE = "hammer"

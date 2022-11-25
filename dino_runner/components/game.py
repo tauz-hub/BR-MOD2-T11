@@ -61,7 +61,9 @@ class Game:
 
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
+
         self.obstacle_manager.update()
+
         self.power_up_manager.update()
         self.update_score()
         self.draw_power_up_time()
@@ -80,12 +82,13 @@ class Game:
 
             if time_to_show >= 0:
 
-                text_message = f"{self.player.active_power_up.type_power_up} enabled for {round(time_to_show)} seconds"
+                text_message = f"{round(time_to_show)}s"
                 self.draw_texts(text_message, self.position_for_text_screen_width,
-                                100)
+                                100, 40)
                 pygame.display.update()
             else:
                 self.power_up_manager.reset_power_ups()
+                self.power_up_manager.remove_player_power_up()
 
     def draw(self):
         self.clock.tick(FPS)
@@ -130,8 +133,8 @@ class Game:
         self.score = 0
         self.game_speed = GAME_VEL
 
-    def draw_texts(self, text_message, set_position_x, set_position_y):
-        font = pygame.font.Font(FONT_STYLE, 22)
+    def draw_texts(self, text_message, set_position_x, set_position_y, font_size=22):
+        font = pygame.font.Font(FONT_STYLE, font_size)
         text = font.render(text_message, False, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (set_position_x,
@@ -151,6 +154,7 @@ class Game:
                             position_x_text, position_y_text)
 
         else:
+            self.power_up_manager.remove_player_power_up()
             self.draw_texts(
                 f"Press any key to restart | Score: {self.score} | Deaths: {self.death_count}", position_x_text, position_y_text)
 
